@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, memo, useCallback } from 'react';
 
-function App() {
+const App = () => {
+  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState(['todo 1', 'todo 2'])
+
+  const increment = () => {
+    setCount(count + 1)
+  }
+
+  const addTodo = useCallback(() => {
+    setTodos([...todos, 'new todo'])
+  }, [todos])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <div>
+        <Todos todos={todos} addTodo={addTodo} />
+        <hr/>
+        <div>
+          Count: {count}
+          <br/>
+          <button onClick={increment}>INCREMENT</button>
+        </div>
+      </div>
+  )
 }
 
-export default App;
+const Todos = memo(({ todos, addTodo }) => {
+  console.log('TODOS RENDERED')
+  return <>
+    <h1>MY TODOS</h1>
+    {
+      todos.map((todo, index) => <p key={index}>{todo}</p>)
+    }
+    <button onClick={addTodo}>Add todo</button>
+  </>
+})
+
+export default App
